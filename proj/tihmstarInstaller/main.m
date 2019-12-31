@@ -11,16 +11,9 @@
 #include <spawn.h>
 
 void InstallTihmstarDepends(char *name_of_file) {
-    extern char **environ;
-    pid_t pid;
-    char *argv[] = {
-        "/usr/local/bin/brew",
-        "install",
-        name_of_file,
-        NULL};
-    
-    posix_spawn(&pid, argv[0], NULL, NULL, argv, environ);
-    waitpid(pid, NULL, 0);
+    NSString *command = @"brew install ";
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"%s", name_of_file]];
+    system([command UTF8String]);
 }
 
 void InstallDepends(char *name_of_file) {
@@ -28,18 +21,37 @@ void InstallDepends(char *name_of_file) {
     printf("Done!\n");
 }
 
+
+void gitCloneRec(char *gitaddress){
+    NSString *command = @"cd ~/Desktop/TihmstarSoftware; git clone --recursive ";
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"%s", gitaddress]];
+    system([command UTF8String]);
+}
+
+void initFolerAndCD(){
+    NSString *command = @"mkdir ~/Desktop/TihmstarSoftware; cd  ~/Desktop/TihmstarSoftware";
+    system([command UTF8String]);
+}
+
+void cdAndCompile(char *where){
+    NSString *command = @"cd ";
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/%s; ", where]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"export PKG_CONFIG_PATH=\"/usr/local/opt/openssl@1.1/lib/pkgconfig\"; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"./autogen.sh; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"make; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo make install; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"cd ../; "]];
+    system([command UTF8String]);
+}
+
+
+
 int main() {
     @autoreleasepool {
-        // insert code here...
-        
         printf("===========================================\n");
         printf("Tihmstar depends installer by Brandon Plank\n");
         printf("===========================================\n");
-        
-        sleep(1);
-        
         printf("Installing! Please Wait!\n");
-        
         InstallDepends("ack");
         InstallDepends("atk");
         InstallDepends("autoconf");
@@ -134,10 +146,21 @@ int main() {
         InstallDepends("tcptrace");
         InstallDepends("ucspi-tcp");
         InstallDepends("xz");
-        
+        initFolerAndCD();
+        gitCloneRec("https://github.com/tihmstar/libgeneral");
+        gitCloneRec("https://github.com/tihmstar/img4tool");
+        gitCloneRec("https://github.com/tihmstar/liboffsetfinder64");
+        gitCloneRec("https://github.com/BrandonPlank/libipatcher");
+        gitCloneRec("https://github.com/tihmstar/libfragmentzip");
+        gitCloneRec("https://github.com/libimobiledevice/libirecovery");
+        cdAndCompile("libgeneral");
+        cdAndCompile("img4tool");
+        cdAndCompile("liboffsetfinder64");
+        cdAndCompile("libipatcher");
+        cdAndCompile("libfragmentzip");
+        cdAndCompile("libirecovery");
         printf("Fully installed!\nYou no-longer need to run this script!\n");
-        
-        printf("Now to compile, lets say img4tool, run\n./autogen.sh\nmake\nsudo make install\n");
+        printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
     }
     return 0;
 }
