@@ -12,6 +12,7 @@
 
 #define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]
 
+char *pathToFolder = "~/Desktop/TihmstarSoftware/";
 
 void InstallTihmstarDepends(char *name_of_file) {
     NSString *command = @"brew install ";
@@ -23,7 +24,6 @@ void InstallDepends(char *name_of_file) {
     InstallTihmstarDepends(name_of_file);
     printf("Done!\n");
 }
-
 
 void gitCloneRec(char *gitaddress){
     NSString *command = @"cd ~/Desktop/TihmstarSoftware; git clone --recursive ";
@@ -56,7 +56,6 @@ void help(){
     exit(0);
 }
 
-
 void installXpwn(){
     
     if (fileExists("/usr/local/include/xpwn/libxpwn.h")){
@@ -70,7 +69,6 @@ void installXpwn(){
     }
 }
 
-
 void downloadAndCompile(){
     initFolerAndCD();
     //MARK: Download
@@ -81,8 +79,11 @@ void downloadAndCompile(){
     gitCloneRec("https://github.com/tihmstar/libipatcher");
     gitCloneRec("https://github.com/tihmstar/libfragmentzip");
     gitCloneRec("https://github.com/libimobiledevice/libirecovery");
-    gitCloneRec("https://github.com/tihmstar/libplist");
+    gitCloneRec("https://github.com/libimobiledevice/libplist");
     gitCloneRec("https://github.com/tihmstar/ra1nsn0w");
+    gitCloneRec("https://github.com/libimobiledevice/libimobiledevice");
+    gitCloneRec("https://github.com/tihmstar/futurerestore");
+    gitCloneRec("https://github.com/tihmstar/idevicerestore");
     
     //MARK: Compile
     cdAndCompile("libgeneral");
@@ -94,7 +95,9 @@ void downloadAndCompile(){
     cdAndCompile("libirecovery");
     cdAndCompile("libplist");
     cdAndCompile("ra1nsn0w");
-    
+    cdAndCompile("libimobiledevice");
+    cdAndCompile("futurerestore");
+    cdAndCompile("idevicerestore");
 }
 
 void installDep(){
@@ -193,12 +196,9 @@ void installDep(){
     InstallDepends("tcptrace");
     InstallDepends("ucspi-tcp");
     InstallDepends("xz");
-    
     printf("Fully installed!\nYou no-longer need to run this script!\n");
     printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
-    
 }
-
 
 void all(){
     installDep();
@@ -211,24 +211,15 @@ int main(int argc, const char * argv[]) {
         printf("Tihmstar depends installer by Brandon Plank\n");
         printf("===========================================\n\n");
         printf("xpwn install headers script by Merc\n\n");
-        
-        
-        
         if (argc!=2){
-            // output usage
             help();
-        
-            // leave with code 1
             exit(1);
         }
-        
-        
         NSString *arg1 = [NSString stringWithUTF8String:argv[1]];
+        //NSString *arg2 = [NSString stringWithUTF8String:argv[2]];
         
         if ([arg1  isEqual:@"-c"]){
-            
             downloadAndCompile();
-            
         }
         else if ([arg1 isEqual:@"-a"]){
             all();

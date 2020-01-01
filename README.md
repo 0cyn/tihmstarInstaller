@@ -14,6 +14,11 @@
 * libirecovery
 * libplist
 * ra1nsn0w
+* libimobiledevice
+* futurerestore
+* idevicerestore
+
+
 
 ## Credits
 * Tihmstar for the software :)
