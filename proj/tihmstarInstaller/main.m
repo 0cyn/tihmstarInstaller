@@ -10,6 +10,9 @@
 #include <pwd.h>
 #include <spawn.h>
 
+#define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]
+
+
 void InstallTihmstarDepends(char *name_of_file) {
     NSString *command = @"brew install ";
     command = [command stringByAppendingString:[NSString stringWithFormat:@"%s", name_of_file]];
@@ -54,19 +57,38 @@ void help(){
 }
 
 
+void installXpwn(){
+    
+    if (fileExists("/usr/local/include/xpwn/libxpwn.h")){
+        printf("Skipping xpwn as it is installed!\n");
+        return;
+    } else {
+        NSString *command = @"cd ";
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/xpwn; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"sh install.sh"]];
+        system([command UTF8String]);
+    }
+}
+
+
 void downloadAndCompile(){
     initFolerAndCD();
+    //MARK: Download
     gitCloneRec("https://github.com/tihmstar/libgeneral");
     gitCloneRec("https://github.com/tihmstar/img4tool");
     gitCloneRec("https://github.com/tihmstar/liboffsetfinder64");
-    gitCloneRec("https://github.com/BrandonPlank/libipatcher");
+    gitCloneRec("https://github.com/merculous/xpwn");
+    gitCloneRec("https://github.com/tihmstar/libipatcher");
     gitCloneRec("https://github.com/tihmstar/libfragmentzip");
     gitCloneRec("https://github.com/libimobiledevice/libirecovery");
     gitCloneRec("https://github.com/tihmstar/libplist");
     gitCloneRec("https://github.com/tihmstar/ra1nsn0w");
+    
+    //MARK: Compile
     cdAndCompile("libgeneral");
     cdAndCompile("img4tool");
     cdAndCompile("liboffsetfinder64");
+    installXpwn();
     cdAndCompile("libipatcher");
     cdAndCompile("libfragmentzip");
     cdAndCompile("libirecovery");
@@ -171,6 +193,10 @@ void installDep(){
     InstallDepends("tcptrace");
     InstallDepends("ucspi-tcp");
     InstallDepends("xz");
+    
+    printf("Fully installed!\nYou no-longer need to run this script!\n");
+    printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
+    
 }
 
 
@@ -184,6 +210,8 @@ int main(int argc, const char * argv[]) {
         printf("===========================================\n");
         printf("Tihmstar depends installer by Brandon Plank\n");
         printf("===========================================\n\n");
+        printf("xpwn install headers script by Merc\n\n");
+        
         
         
         if (argc!=2){
@@ -213,9 +241,6 @@ int main(int argc, const char * argv[]) {
         }else{
             help();
         }
-
-        printf("Fully installed!\nYou no-longer need to run this script!\n");
-        printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
     }
     return 0;
 }

@@ -8,6 +8,14 @@
 * libgerneral 
 * img4tool
 * liboffsetfinder64
-* libipatcher (My fork so it has the correct headers)
+* xpwn
+* libipatcher
 * libfragmentzip
 * libirecovery
+* libplist
+* ra1nsn0w
+
+## Credits
+* Tihmstar for the software :)
+* Brandon Plank for the amazing installer
+* Merc for the xpwn fork :)
