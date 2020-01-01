@@ -48,10 +48,11 @@ void cdAndCompile(char *where){
 }
 
 void help(){
-    printf("Usage: tihmstarinstaller <arg>\n");
+    printf("Usage: tihmstarInstaller <arg>\n");
     printf("-c              Just download and compile all the software\n");
     printf("-d              Download all depends\n");
     printf("-a              Do all\n");
+    printf("-u              Updates all packages\n");
     printf("-h              Shows this help\n");
     exit(0);
 }
@@ -200,6 +201,19 @@ void installDep(){
     printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }
 
+void removeRepos(){
+    NSString *command = @"cd ";
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"rm -rf *"]];
+    system([command UTF8String]);
+}
+
+void update(){
+    printf("Updating all software packages!\n");
+    removeRepos();
+    downloadAndCompile();
+}
+
 void all(){
     installDep();
     downloadAndCompile();
@@ -227,9 +241,13 @@ int main(int argc, const char * argv[]) {
         else if ([arg1 isEqual:@"-d"]){
             installDep();
         }
+        else if ([arg1 isEqual:@"-u"]){
+            update();
+        }
         else if ([arg1 isEqual:@"-h"]){
             help();
         }else{
+            
             help();
         }
     }
