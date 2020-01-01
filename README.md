@@ -5,12 +5,12 @@
 
 ## Usage notes
 
-Usage: tihmstarInstaller <arg>
--c              Just download and compile all the software
--d              Download all depends
--a              Do all
--u              Updates all packages
--h              Shows this help
+* Usage: tihmstarInstaller <arg>
+* -c              Just download and compile all the software
+* -d              Download all depends
+* -a              Do all
+* -u              Updates all packages
+* -h              Shows this help
 
 
 ## What does it build as of right now?
@@ -27,6 +27,9 @@ Usage: tihmstarInstaller <arg>
 * libimobiledevice
 * futurerestore
 * idevicerestore
+
+## Why make this?
+### I made this because i know how hard it is to compile his software.
 
 
 
