@@ -202,14 +202,15 @@ void installDep(){
 }
 
 void removeRepos(){
-    NSString *command = @"cd ";
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"rm -rf *"]];
+    NSString *command = @"rm -rf ~/Desktop/TihmstarSoftware/; ";
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"mkdir ~/Desktop/TihmstarSoftware/; "]];
     system([command UTF8String]);
+    //thanks ethan
 }
 
 void update(){
     printf("Updating all software packages!\n");
+    initFolerAndCD();
     removeRepos();
     downloadAndCompile();
 }
