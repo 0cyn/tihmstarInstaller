@@ -23,6 +23,7 @@
 * libfragmentzip
 * libirecovery
 * libplist
+* iBoot64Patcher
 * ra1nsn0w
 * libimobiledevice
 * futurerestore
