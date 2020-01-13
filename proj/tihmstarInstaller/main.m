@@ -82,6 +82,15 @@ void installXpwn(){
     }
 }
 
+void installiBoot32(){
+    NSString *command = @"cd ";
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/iBoot32Patcher; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"mv iBoot32Patcher /usr/bin/iBoot32Patcher; "]];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"chmod +x /usr/bin/iBoot32Patcher"]];
+    system([command UTF8String]);
+}
+
 void downloadAndCompile(){
     initFolerAndCD();
     //MARK: Download
@@ -98,6 +107,12 @@ void downloadAndCompile(){
     gitCloneRec("https://github.com/libimobiledevice/libimobiledevice");
     gitCloneRec("https://github.com/tihmstar/futurerestore");
     gitCloneRec("https://github.com/tihmstar/idevicerestore");
+    gitCloneRec("https://github.com/tihmstar/igetnonce");
+    gitCloneRec("https://github.com/libimobiledevice/libusbmuxd");
+    gitCloneRec("https://github.com/tihmstar/libtakeover");
+    gitCloneRec("https://github.com/tihmstar/libgrabkernel");
+    gitCloneRec("https://github.com/tihmstar/iBoot32Patcher");
+    gitCloneRec("https://github.com/tihmstar/partialZipBrowser");
     
     //MARK: Compile
     cdAndCompile("libgeneral");
@@ -113,6 +128,14 @@ void downloadAndCompile(){
     cdAndCompile("libimobiledevice");
     cdAndCompile("futurerestore");
     cdAndCompile("idevicerestore");
+    cdAndCompile("igetnonce");
+    cdAndCompile("libusbmuxd");
+    cdAndCompile("libtakeover");
+    cdAndCompile("libgrabkernel");
+    installiBoot32();
+    cdAndCompile("partialZipBrowser");
+    
+    
     printf("Fully installed!\nYou no-longer need to run this script!\n");
     printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }

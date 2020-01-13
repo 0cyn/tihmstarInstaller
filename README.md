@@ -28,6 +28,12 @@
 * libimobiledevice
 * futurerestore
 * idevicerestore
+* igetnonce
+* libusbmuxd
+* libtakeover
+* libgrabkernel
+* iBoot32Patcher
+* partailZipBrowser
 
 ## Why make this?
 ### I made this because i know how hard it is to compile his software.
