@@ -47,6 +47,18 @@ void cdAndCompile(char *where){
     system([command UTF8String]);
 }
 
+void initInstallBrew(){
+    if (fileExists("/usr/local/bin/brew")){
+        printf("Skipping brew as it is installed!\n");
+        return;
+    } else {
+        NSString *command = @"cd ";
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""]];
+        system([command UTF8String]);
+        return;
+    }
+}
+
 void help(){
     printf("Usage: tihmstarInstaller <arg>\n");
     printf("-c              Just download and compile all the software\n");
@@ -58,7 +70,6 @@ void help(){
 }
 
 void installXpwn(){
-    
     if (fileExists("/usr/local/include/xpwn/libxpwn.h")){
         printf("Skipping xpwn as it is installed!\n");
         return;
@@ -67,6 +78,7 @@ void installXpwn(){
         command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/xpwn; "]];
         command = [command stringByAppendingString:[NSString stringWithFormat:@"sh install.sh"]];
         system([command UTF8String]);
+        return;
     }
 }
 
@@ -103,6 +115,7 @@ void downloadAndCompile(){
 
 void installDep(){
     printf("Installing! Please Wait!\n");
+    initInstallBrew();
     InstallDepends("ack");
     InstallDepends("atk");
     InstallDepends("autoconf");
