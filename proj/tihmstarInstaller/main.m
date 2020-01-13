@@ -286,7 +286,6 @@ int main(int argc, const char * argv[]) {
         else if ([arg1 isEqual:@"-h"]){
             help();
         }else{
-            
             help();
         }
     }
