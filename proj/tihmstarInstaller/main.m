@@ -93,6 +93,7 @@ void downloadAndCompile(){
     gitCloneRec("https://github.com/tihmstar/libfragmentzip");
     gitCloneRec("https://github.com/libimobiledevice/libirecovery");
     gitCloneRec("https://github.com/libimobiledevice/libplist");
+    gitCloneRec("https://github.com/tihmstar/iBoot64Patcher");
     gitCloneRec("https://github.com/tihmstar/ra1nsn0w");
     gitCloneRec("https://github.com/libimobiledevice/libimobiledevice");
     gitCloneRec("https://github.com/tihmstar/futurerestore");
@@ -107,6 +108,7 @@ void downloadAndCompile(){
     cdAndCompile("libfragmentzip");
     cdAndCompile("libirecovery");
     cdAndCompile("libplist");
+    cdAndCompile("iBoot64Patcher");
     cdAndCompile("ra1nsn0w");
     cdAndCompile("libimobiledevice");
     cdAndCompile("futurerestore");
