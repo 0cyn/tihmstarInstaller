@@ -111,6 +111,8 @@ void downloadAndCompile(){
     cdAndCompile("libimobiledevice");
     cdAndCompile("futurerestore");
     cdAndCompile("idevicerestore");
+    printf("Fully installed!\nYou no-longer need to run this script!\n");
+    printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }
 
 void installDep(){
@@ -210,8 +212,6 @@ void installDep(){
     InstallDepends("tcptrace");
     InstallDepends("ucspi-tcp");
     InstallDepends("xz");
-    printf("Fully installed!\nYou no-longer need to run this script!\n");
-    printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }
 
 void removeRepos(){
@@ -235,9 +235,9 @@ void all(){
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        printf("===========================================\n");
-        printf("Tihmstar depends installer by Brandon Plank\n");
-        printf("===========================================\n\n");
+        printf("==================================\n");
+        printf("tihmstarInstaller by Brandon Plank\n");
+        printf("==================================\n\n");
         printf("xpwn install headers script by Merc\n\n");
         if (argc!=2){
             help();
