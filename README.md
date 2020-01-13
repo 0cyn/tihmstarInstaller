@@ -15,7 +15,7 @@
 
 ## What does it build as of right now?
 
-* libgerneral 
+* libgeneral 
 * img4tool
 * liboffsetfinder64
 * xpwn
