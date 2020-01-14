@@ -132,6 +132,7 @@
 - tcpreplay
 - tcptrace
 - ucspi-tcp
+* zip
 - xz
 
 ## Why make this?
