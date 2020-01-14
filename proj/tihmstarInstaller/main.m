@@ -20,9 +20,26 @@ void InstallTihmstarDepends(char *name_of_file) {
     system([command UTF8String]);
 }
 
+void initInstallBrew(){
+    if (fileExists("/usr/local/bin/brew")){
+        printf("Skipping brew as it is installed!\n");
+        return;
+    } else {
+        NSString *command = @"cd ";
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""]];
+        system([command UTF8String]);
+        return;
+    }
+}
+
 void InstallDepends(char *name_of_file) {
-    InstallTihmstarDepends(name_of_file);
-    printf("Done!\n");
+    if (strcmp(name_of_file, "brew") == 0){
+        initInstallBrew();
+        return;
+    } else {
+        InstallTihmstarDepends(name_of_file);
+        printf("Done!\n");
+    }
 }
 
 void gitCloneRec(char *gitaddress){
@@ -36,37 +53,28 @@ void initFolerAndCD(){
     system([command UTF8String]);
 }
 
-void cdAndCompile(char *where){
-    NSString *command = @"cd ";
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/%s; ", where]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"export PKG_CONFIG_PATH=\"/usr/local/opt/openssl@1.1/lib/pkgconfig\"; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"./autogen.sh; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"make; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo make install; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"cd ../; "]];
-    system([command UTF8String]);
-}
-
-void initInstallBrew(){
-    if (fileExists("/usr/local/bin/brew")){
-        printf("Skipping brew as it is installed!\n");
-        return;
-    } else {
+void installiBoot32(){
+    if (fileExists("/usr/bin/iBoot32Patcher")){
+        printf("Treating iBoot32Patcher with care!\n");
         NSString *command = @"cd ";
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/iBoot32Patcher; "]];
+        printf("Removing old iBoot32Patcher!\n");
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo rm -rf /usr/bin/iBoot32Patcher; "]];
+        printf("Adding new iBoot32Patcher!\n");
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo mv iBoot32Patcher /usr/bin/iBoot32Patcher; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo chmod +x /usr/bin/iBoot32Patcher"]];
         system([command UTF8String]);
         return;
-    }
-}
-
-void help(){
-    printf("Usage: tihmstarInstaller <arg>\n");
-    printf("-c              Just download and compile all the software\n");
-    printf("-d              Download all depends\n");
-    printf("-a              Do all\n");
-    printf("-u              Updates all packages\n");
-    printf("-h              Shows this help\n");
-    exit(0);
+       } else {
+           NSString *command = @"cd ";
+           command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/iBoot32Patcher; "]];
+           command = [command stringByAppendingString:[NSString stringWithFormat:@"clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; "]];
+           command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo mv iBoot32Patcher /usr/bin/iBoot32Patcher; "]];
+           command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo chmod +x /usr/bin/iBoot32Patcher"]];
+           system([command UTF8String]);
+           return;
+       }
 }
 
 void installXpwn(){
@@ -82,13 +90,34 @@ void installXpwn(){
     }
 }
 
-void installiBoot32(){
-    NSString *command = @"cd ";
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/iBoot32Patcher; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"mv iBoot32Patcher /usr/bin/iBoot32Patcher; "]];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"chmod +x /usr/bin/iBoot32Patcher"]];
-    system([command UTF8String]);
+void cdAndCompile(char *where){
+    if (strcmp(where, "xpwn") == 0){
+        installXpwn();
+        return;
+    } else if (strcmp(where, "iBoot32Patcher") == 0){
+        installiBoot32();
+        return;
+    } else {
+        NSString *command = @"cd ";
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/%s; ", where]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"export PKG_CONFIG_PATH=\"/usr/local/opt/openssl@1.1/lib/pkgconfig\"; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"./autogen.sh; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"make; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo make install; "]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"cd ../; "]];
+        system([command UTF8String]);
+        return;
+    }
+}
+
+void help(){
+    printf("Usage: tihmstarInstaller <arg>\n");
+    printf("-c              Just download and compile all the software\n");
+    printf("-d              Download all depends\n");
+    printf("-a              Do all\n");
+    printf("-u              Updates all packages\n");
+    printf("-h              Shows this help\n");
+    exit(0);
 }
 
 void downloadAndCompile(){
@@ -113,12 +142,11 @@ void downloadAndCompile(){
     gitCloneRec("https://github.com/tihmstar/libgrabkernel");
     gitCloneRec("https://github.com/tihmstar/iBoot32Patcher");
     gitCloneRec("https://github.com/tihmstar/partialZipBrowser");
-    
     //MARK: Compile
     cdAndCompile("libgeneral");
     cdAndCompile("img4tool");
     cdAndCompile("liboffsetfinder64");
-    installXpwn();
+    cdAndCompile("xpwn");
     cdAndCompile("libipatcher");
     cdAndCompile("libfragmentzip");
     cdAndCompile("libirecovery");
@@ -132,17 +160,15 @@ void downloadAndCompile(){
     cdAndCompile("libusbmuxd");
     cdAndCompile("libtakeover");
     cdAndCompile("libgrabkernel");
-    installiBoot32();
+    cdAndCompile("iBoot32Patcher");
     cdAndCompile("partialZipBrowser");
-    
-    
     printf("Fully installed!\nYou no-longer need to run this script!\n");
     printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }
 
 void installDep(){
     printf("Installing! Please Wait!\n");
-    initInstallBrew();
+    InstallDepends("brew");
     InstallDepends("ack");
     InstallDepends("atk");
     InstallDepends("autoconf");
@@ -270,7 +296,6 @@ int main(int argc, const char * argv[]) {
         }
         NSString *arg1 = [NSString stringWithUTF8String:argv[1]];
         //NSString *arg2 = [NSString stringWithUTF8String:argv[2]];
-        
         if ([arg1  isEqual:@"-c"]){
             downloadAndCompile();
         }
