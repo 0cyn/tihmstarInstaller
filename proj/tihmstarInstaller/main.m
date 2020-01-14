@@ -259,6 +259,7 @@ void installDep(){
     InstallDepends("tcpreplay");
     InstallDepends("tcptrace");
     InstallDepends("ucspi-tcp");
+    InstallDepends("zip");
     InstallDepends("xz");
 }
 
