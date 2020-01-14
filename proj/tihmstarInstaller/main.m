@@ -14,12 +14,6 @@
 
 char *pathToFolder = "~/Desktop/TihmstarSoftware/";
 
-void InstallTihmstarDepends(char *name_of_file) {
-    NSString *command = @"brew install ";
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"%s", name_of_file]];
-    system([command UTF8String]);
-}
-
 void initInstallBrew(){
     if (fileExists("/usr/local/bin/brew")){
         printf("Skipping brew as it is installed!\n");
@@ -37,8 +31,11 @@ void InstallDepends(char *name_of_file) {
         initInstallBrew();
         return;
     } else {
-        InstallTihmstarDepends(name_of_file);
+        NSString *command = @"brew install ";
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"%s", name_of_file]];
+        system([command UTF8String]);
         printf("Done!\n");
+        return;
     }
 }
 
