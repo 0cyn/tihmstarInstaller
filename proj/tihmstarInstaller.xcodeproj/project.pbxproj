@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		8881798E23BAD99D00327E34 /* tihmstarInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tihmstarInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
 		8881799123BAD99D00327E34 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		88ADEAD223E5C9C100B6D7D7 /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +58,7 @@
 		8881799023BAD99D00327E34 /* tihmstarInstaller */ = {
 			isa = PBXGroup;
 			children = (
+				88ADEAD223E5C9C100B6D7D7 /* config */,
 				8881799123BAD99D00327E34 /* main.m */,
 			);
 			path = tihmstarInstaller;

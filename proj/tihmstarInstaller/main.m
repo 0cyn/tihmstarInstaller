@@ -12,7 +12,6 @@
 
 #define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]
 
-char *pathToFolder = "~/Desktop/TihmstarSoftware/";
 
 void initInstallBrew(){
     if (fileExists("/usr/local/bin/brew")){
@@ -26,7 +25,7 @@ void initInstallBrew(){
     }
 }
 
-void InstallDepends(char *name_of_file) {
+void InstallDepends(char *name_of_file){
     if (strcmp(name_of_file, "brew") == 0){
         initInstallBrew();
         return;
@@ -39,64 +38,60 @@ void InstallDepends(char *name_of_file) {
     }
 }
 
-void gitCloneRec(char *gitaddress){
-    NSString *command = @"cd ~/Desktop/TihmstarSoftware; git clone --recursive ";
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"%s", gitaddress]];
+void gitCloneRec(char *gitaddress, const char *Where){
+    NSString *formatted_where = [NSString stringWithUTF8String:Where];
+    NSString *command = [NSString stringWithFormat:@"cd %@; git clone --recursive %s", formatted_where, gitaddress];
+    
     system([command UTF8String]);
 }
 
-void initFolerAndCD(){
-    NSString *command = @"mkdir ~/Desktop/TihmstarSoftware; cd  ~/Desktop/TihmstarSoftware";
+void initFolerAndCD(const char *Where){
+    NSString *formatted_where = [NSString stringWithUTF8String:Where];
+    NSString *command = [NSString stringWithFormat:@"mkdir %@; ", formatted_where];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"cd %@", formatted_where]];
     system([command UTF8String]);
 }
 
-void installiBoot32(){
+void installiBoot32(const char *Where){
+    NSString *formatted_where = [NSString stringWithUTF8String:Where];
     if (fileExists("/usr/bin/iBoot32Patcher")){
         printf("Treating iBoot32Patcher with care!\n");
-        NSString *command = @"cd ";
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/iBoot32Patcher; "]];
-        printf("Removing old iBoot32Patcher!\n");
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo rm -rf /usr/bin/iBoot32Patcher; "]];
-        printf("Adding new iBoot32Patcher!\n");
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; "]];
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo mv iBoot32Patcher /usr/bin/iBoot32Patcher; "]];
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo chmod +x /usr/bin/iBoot32Patcher"]];
+        NSString *command = [NSString stringWithFormat:@" cd %@iBoot32Patcher; sudo rm -rf /usr/bin/iBoot32Patcher; clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; sudo mv iBoot32Patcher /usr/bin/iBoot32Patcher; sudo chmod +x /usr/bin/iBoot32Patcher", formatted_where];
         system([command UTF8String]);
         return;
        } else {
-           NSString *command = @"cd ";
-           command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/iBoot32Patcher; "]];
-           command = [command stringByAppendingString:[NSString stringWithFormat:@"clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; "]];
-           command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo mv iBoot32Patcher /usr/bin/iBoot32Patcher; "]];
-           command = [command stringByAppendingString:[NSString stringWithFormat:@"sudo chmod +x /usr/bin/iBoot32Patcher"]];
+           NSString *command = [NSString stringWithFormat:@" cd %@iBoot32Patcher; clang iBoot32Patcher.c finders.c functions.c patchers.c -Wno-multichar -I. -o iBoot32Patcher; sudo mv iBoot32Patcher /usr/bin/iBoot32Patcher; sudo chmod +x /usr/bin/iBoot32Patcher", formatted_where];
            system([command UTF8String]);
            return;
        }
 }
 
-void installXpwn(){
+void installXpwn(const char *Where){
     if (fileExists("/usr/local/include/xpwn/libxpwn.h")){
-        printf("Skipping xpwn as it is installed!\n");
+        NSString *formatted_where = [NSString stringWithUTF8String:Where];
+        printf("Treating xpwn with care!\n");
+        NSString *command = [NSString stringWithFormat:@"rm -rf /usr/local/include/xpwn; cd %@xpwn; sh install.sh", formatted_where];
+        system([command UTF8String]);
         return;
     } else {
-        NSString *command = @"cd ";
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/xpwn; "]];
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"sh install.sh"]];
+        NSString *formatted_where = [NSString stringWithUTF8String:Where];
+        NSString *command = [NSString stringWithFormat:@"cd %@xpwn; sh install.sh", formatted_where];
         system([command UTF8String]);
         return;
     }
 }
 
-void cdAndCompile(char *where){
+void cdAndCompile(char *where, const char *PathToDir){
     if (strcmp(where, "xpwn") == 0){
-        installXpwn();
+        installXpwn(PathToDir);
         return;
     } else if (strcmp(where, "iBoot32Patcher") == 0){
-        installiBoot32();
+        installiBoot32(PathToDir);
         return;
     } else {
+        NSString *formatted_where = [NSString stringWithUTF8String:PathToDir];
         NSString *command = @"cd ";
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/%s; ", where]];
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"%@%s; ", formatted_where, where]];
         command = [command stringByAppendingString:[NSString stringWithFormat:@"export PKG_CONFIG_PATH=\"/usr/local/opt/openssl@1.1/lib/pkgconfig\"; "]];
         command = [command stringByAppendingString:[NSString stringWithFormat:@"./autogen.sh; "]];
         command = [command stringByAppendingString:[NSString stringWithFormat:@"make; "]];
@@ -110,55 +105,57 @@ void cdAndCompile(char *where){
 void help(){
     printf("Usage: tihmstarInstaller <arg>\n");
     printf("-c              Just download and compile all the software\n");
-    printf("-d              Download all depends\n");
-    printf("-a              Do all\n");
+    printf("-d              Download all depends(not recommended, run -a)\n");
+    printf("-a              Do all(Only run once, after this run -c or -u)\n");
     printf("-u              Updates all packages\n");
     printf("-h              Shows this help\n");
+    printf("Note            When inputting your custom install location, please edit the config file with the path to the folder :)\n");
+    printf("Example Command tihmstarInstaller -c\n");
     exit(0);
 }
 
-void downloadAndCompile(){
-    initFolerAndCD();
+void downloadAndCompile(const char *Where){
+    initFolerAndCD(Where);
     //MARK: Download
-    gitCloneRec("https://github.com/tihmstar/libgeneral");
-    gitCloneRec("https://github.com/tihmstar/img4tool");
-    gitCloneRec("https://github.com/tihmstar/liboffsetfinder64");
-    gitCloneRec("https://github.com/merculous/xpwn");
-    gitCloneRec("https://github.com/tihmstar/libipatcher");
-    gitCloneRec("https://github.com/tihmstar/libfragmentzip");
-    gitCloneRec("https://github.com/libimobiledevice/libirecovery");
-    gitCloneRec("https://github.com/libimobiledevice/libplist");
-    gitCloneRec("https://github.com/tihmstar/iBoot64Patcher");
-    gitCloneRec("https://github.com/tihmstar/ra1nsn0w");
-    gitCloneRec("https://github.com/libimobiledevice/libimobiledevice");
-    gitCloneRec("https://github.com/tihmstar/futurerestore");
-    gitCloneRec("https://github.com/tihmstar/idevicerestore");
-    gitCloneRec("https://github.com/tihmstar/igetnonce");
-    gitCloneRec("https://github.com/libimobiledevice/libusbmuxd");
-    gitCloneRec("https://github.com/tihmstar/libtakeover");
-    gitCloneRec("https://github.com/tihmstar/libgrabkernel");
-    gitCloneRec("https://github.com/tihmstar/iBoot32Patcher");
-    gitCloneRec("https://github.com/tihmstar/partialZipBrowser");
+    gitCloneRec("https://github.com/tihmstar/libgeneral", Where);
+    gitCloneRec("https://github.com/tihmstar/img4tool", Where);
+    gitCloneRec("https://github.com/tihmstar/liboffsetfinder64", Where);
+    gitCloneRec("https://github.com/merculous/xpwn", Where);
+    gitCloneRec("https://github.com/tihmstar/libipatcher", Where);
+    gitCloneRec("https://github.com/tihmstar/libfragmentzip", Where);
+    gitCloneRec("https://github.com/libimobiledevice/libirecovery", Where);
+    gitCloneRec("https://github.com/libimobiledevice/libplist", Where);
+    gitCloneRec("https://github.com/tihmstar/iBoot64Patcher", Where);
+    gitCloneRec("https://github.com/tihmstar/ra1nsn0w", Where);
+    gitCloneRec("https://github.com/libimobiledevice/libimobiledevice", Where);
+    gitCloneRec("https://github.com/tihmstar/futurerestore", Where);
+    gitCloneRec("https://github.com/tihmstar/idevicerestore", Where);
+    gitCloneRec("https://github.com/tihmstar/igetnonce", Where);
+    gitCloneRec("https://github.com/libimobiledevice/libusbmuxd", Where);
+    gitCloneRec("https://github.com/tihmstar/libtakeover", Where);
+    gitCloneRec("https://github.com/tihmstar/libgrabkernel", Where);
+    gitCloneRec("https://github.com/tihmstar/iBoot32Patcher", Where);
+    gitCloneRec("https://github.com/tihmstar/partialZipBrowser", Where);
     //MARK: Compile
-    cdAndCompile("libgeneral");
-    cdAndCompile("img4tool");
-    cdAndCompile("liboffsetfinder64");
-    cdAndCompile("xpwn");
-    cdAndCompile("libipatcher");
-    cdAndCompile("libfragmentzip");
-    cdAndCompile("libirecovery");
-    cdAndCompile("libplist");
-    cdAndCompile("iBoot64Patcher");
-    cdAndCompile("ra1nsn0w");
-    cdAndCompile("libimobiledevice");
-    cdAndCompile("futurerestore");
-    cdAndCompile("idevicerestore");
-    cdAndCompile("igetnonce");
-    cdAndCompile("libusbmuxd");
-    cdAndCompile("libtakeover");
-    cdAndCompile("libgrabkernel");
-    cdAndCompile("iBoot32Patcher");
-    cdAndCompile("partialZipBrowser");
+    cdAndCompile("libgeneral", Where);
+    cdAndCompile("img4tool", Where);
+    cdAndCompile("liboffsetfinder64", Where);
+    cdAndCompile("xpwn", Where);
+    cdAndCompile("libipatcher", Where);
+    cdAndCompile("libfragmentzip", Where);
+    cdAndCompile("libirecovery", Where);
+    cdAndCompile("libplist", Where);
+    cdAndCompile("iBoot64Patcher", Where);
+    cdAndCompile("ra1nsn0w", Where);
+    cdAndCompile("libimobiledevice", Where);
+    cdAndCompile("futurerestore", Where);
+    cdAndCompile("idevicerestore", Where);
+    cdAndCompile("igetnonce", Where);
+    cdAndCompile("libusbmuxd", Where);
+    cdAndCompile("libtakeover", Where);
+    cdAndCompile("libgrabkernel", Where);
+    cdAndCompile("iBoot32Patcher", Where);
+    cdAndCompile("partialZipBrowser", Where);
     printf("Fully installed!\nYou no-longer need to run this script!\n");
     printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }
@@ -263,53 +260,76 @@ void installDep(){
     InstallDepends("xz");
 }
 
-void removeRepos(){
-    NSString *command = @"rm -rf ~/Desktop/TihmstarSoftware/; ";
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"mkdir ~/Desktop/TihmstarSoftware/; "]];
+void removeRepos(const char *Where){
+    NSString *formatted_where = [NSString stringWithUTF8String:Where];
+    NSString *command = [NSString stringWithFormat:@"rm -rf %@; mkdir %@; ", formatted_where, formatted_where];
     system([command UTF8String]);
-    //thanks ethan
 }
 
-void update(){
+void update(const char *Where){
     printf("Updating all software packages!\n");
-    initFolerAndCD();
-    removeRepos();
-    downloadAndCompile();
+    initFolerAndCD(Where);
+    removeRepos(Where);
+    downloadAndCompile(Where);
 }
 
-void all(){
+void all(const char *Where){
     installDep();
-    downloadAndCompile();
+    downloadAndCompile(Where);
 }
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         printf("==================================\n");
-        printf("tihmstarInstaller by Brandon Plank\n");
+        printf("tihmstarInstaller\n");
+        printf("Made by 0x36b\n");
         printf("==================================\n\n");
-        printf("xpwn install headers script by Merc\n\n");
-        if (argc!=2){
+        
+        if (argc!=2) {
             help();
-            exit(1);
+            exit(0);
         }
+        
         NSString *arg1 = [NSString stringWithUTF8String:argv[1]];
-        //NSString *arg2 = [NSString stringWithUTF8String:argv[2]];
+        //NSString *arg2 = [NSString stringWithUTF8String:argv[2]]; //Custom directory.
+        
+        // get a reference to our file
+        NSString *arg2 = [[NSBundle mainBundle]pathForResource:@"config/config" ofType:@"txt"];
+        printf("%s\n", [arg2 UTF8String]);
+        // read the contents into a string
+        NSString *arg2_1 = [[NSString alloc]initWithContentsOfFile:arg2 encoding:NSUTF8StringEncoding error:nil];
+             
+        // display our file
+        NSLog(@"Our config file contains this: %@\n", arg2_1);
+        NSLog(@"debug 1: %@\n", arg1);
+        
+        arg2_1 = [arg2_1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            
+        if ([arg2_1 isEqual:@"default"]){
+            arg2_1 = [NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/"];
+            printf("Did not input custom location, Setting default to ~/Desktop/TihmstarSoftware/\n");
+        } else {
+            arg2_1 = arg2_1;
+            printf("Did find input custom location, Setting default to %s\n", [arg2_1 UTF8String]);
+        }
+        //exit(1);
+        NSString *where = [NSString stringWithFormat:@"%@", arg2_1];
         if ([arg1  isEqual:@"-c"]){
-            downloadAndCompile();
+            downloadAndCompile([where UTF8String]);
         }
         else if ([arg1 isEqual:@"-a"]){
-            all();
+            all([where UTF8String]);
         }
         else if ([arg1 isEqual:@"-d"]){
             installDep();
         }
         else if ([arg1 isEqual:@"-u"]){
-            update();
+            update([where UTF8String]);
         }
         else if ([arg1 isEqual:@"-h"]){
             help();
         }else{
-            help();
+        help();
         }
     }
     return 0;
