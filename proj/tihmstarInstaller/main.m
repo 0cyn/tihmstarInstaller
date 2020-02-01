@@ -25,7 +25,7 @@ void initInstallBrew(){
     }
 }
 
-void InstallDepends(char *name_of_file){
+void InstallDepends(const char *name_of_file){
     if (strcmp(name_of_file, "brew") == 0){
         initInstallBrew();
         return;
@@ -36,20 +36,6 @@ void InstallDepends(char *name_of_file){
         printf("Done!\n");
         return;
     }
-}
-
-void gitCloneRec(char *gitaddress, const char *Where){
-    NSString *formatted_where = [NSString stringWithUTF8String:Where];
-    NSString *command = [NSString stringWithFormat:@"cd %@; git clone --recursive %s", formatted_where, gitaddress];
-    
-    system([command UTF8String]);
-}
-
-void initFolerAndCD(const char *Where){
-    NSString *formatted_where = [NSString stringWithUTF8String:Where];
-    NSString *command = [NSString stringWithFormat:@"mkdir %@; ", formatted_where];
-    command = [command stringByAppendingString:[NSString stringWithFormat:@"cd %@", formatted_where]];
-    system([command UTF8String]);
 }
 
 void installiBoot32(const char *Where){
@@ -81,7 +67,7 @@ void installXpwn(const char *Where){
     }
 }
 
-void cdAndCompile(char *where, const char *PathToDir){
+void cdAndCompile(const char *where, const char *PathToDir){
     if (strcmp(where, "xpwn") == 0){
         installXpwn(PathToDir);
         return;
@@ -102,6 +88,29 @@ void cdAndCompile(char *where, const char *PathToDir){
     }
 }
 
+void gitCloneRec(const char *gitaddress, const char *Where){
+    NSString *format = [NSString stringWithUTF8String:gitaddress];
+    
+    NSArray * actualPlace = [format componentsSeparatedByCharactersInSet:
+    [NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    NSString *lastWord = actualPlace.lastObject;
+    printf("%s\n", [lastWord UTF8String]);
+    
+    NSString *formatted_where = [NSString stringWithUTF8String:Where];
+    NSString *command = [NSString stringWithFormat:@"cd %@; git clone --recursive %s", formatted_where, gitaddress];
+    
+    cdAndCompile([lastWord UTF8String], Where);
+    
+    system([command UTF8String]);
+}
+
+void initFolerAndCD(const char *Where){
+    NSString *formatted_where = [NSString stringWithUTF8String:Where];
+    NSString *command = [NSString stringWithFormat:@"mkdir %@; ", formatted_where];
+    command = [command stringByAppendingString:[NSString stringWithFormat:@"cd %@", formatted_where]];
+    system([command UTF8String]);
+}
+
 void help(){
     printf("Usage: tihmstarInstaller <arg>\n");
     printf("-c              Just download and compile all the software\n");
@@ -117,147 +126,32 @@ void help(){
 void downloadAndCompile(const char *Where){
     initFolerAndCD(Where);
     //MARK: Download
-    gitCloneRec("https://github.com/tihmstar/libgeneral", Where);
-    gitCloneRec("https://github.com/tihmstar/img4tool", Where);
-    gitCloneRec("https://github.com/tihmstar/liboffsetfinder64", Where);
-    gitCloneRec("https://github.com/merculous/xpwn", Where);
-    gitCloneRec("https://github.com/tihmstar/libipatcher", Where);
-    gitCloneRec("https://github.com/tihmstar/libfragmentzip", Where);
-    gitCloneRec("https://github.com/libimobiledevice/libirecovery", Where);
-    gitCloneRec("https://github.com/libimobiledevice/libplist", Where);
-    gitCloneRec("https://github.com/tihmstar/iBoot64Patcher", Where);
-    gitCloneRec("https://github.com/tihmstar/ra1nsn0w", Where);
-    gitCloneRec("https://github.com/libimobiledevice/libimobiledevice", Where);
-    gitCloneRec("https://github.com/tihmstar/futurerestore", Where);
-    gitCloneRec("https://github.com/tihmstar/idevicerestore", Where);
-    gitCloneRec("https://github.com/tihmstar/igetnonce", Where);
-    gitCloneRec("https://github.com/libimobiledevice/libusbmuxd", Where);
-    gitCloneRec("https://github.com/tihmstar/libtakeover", Where);
-    gitCloneRec("https://github.com/tihmstar/libgrabkernel", Where);
-    gitCloneRec("https://github.com/tihmstar/iBoot32Patcher", Where);
-    gitCloneRec("https://github.com/tihmstar/partialZipBrowser", Where);
-    //MARK: Compile
-    cdAndCompile("libgeneral", Where);
-    cdAndCompile("img4tool", Where);
-    cdAndCompile("liboffsetfinder64", Where);
-    cdAndCompile("xpwn", Where);
-    cdAndCompile("libipatcher", Where);
-    cdAndCompile("libfragmentzip", Where);
-    cdAndCompile("libirecovery", Where);
-    cdAndCompile("libplist", Where);
-    cdAndCompile("iBoot64Patcher", Where);
-    cdAndCompile("ra1nsn0w", Where);
-    cdAndCompile("libimobiledevice", Where);
-    cdAndCompile("futurerestore", Where);
-    cdAndCompile("idevicerestore", Where);
-    cdAndCompile("igetnonce", Where);
-    cdAndCompile("libusbmuxd", Where);
-    cdAndCompile("libtakeover", Where);
-    cdAndCompile("libgrabkernel", Where);
-    cdAndCompile("iBoot32Patcher", Where);
-    cdAndCompile("partialZipBrowser", Where);
+    NSArray *tools;
+    int i;
+    int count;
+       
+    tools = [NSArray arrayWithObjects:@"https://github.com/tihmstar/libgeneral", @"https://github.com/tihmstar/img4tool", @"https://github.com/tihmstar/liboffsetfinder64", @"https://github.com/0x36b/xpwn", @"https://github.com/tihmstar/libipatcher", @"https://github.com/tihmstar/libfragmentzip", @"https://github.com/libimobiledevice/libirecovery", @"https://github.com/libimobiledevice/libplist", @"https://github.com/tihmstar/iBoot64Patcher", @"https://github.com/tihmstar/ra1nsn0w", @"https://github.com/libimobiledevice/libimobiledevice", @"https://github.com/tihmstar/futurerestore", @"https://github.com/tihmstar/idevicerestore", @"https://github.com/tihmstar/igetnonce", @"https://github.com/libimobiledevice/libusbmuxd", @"https://github.com/tihmstar/libtakeover", @"https://github.com/tihmstar/libgrabkernel", @"https://github.com/tihmstar/iBoot32Patcher", @"https://github.com/tihmstar/partialZipBrowser", nil];
+    count = [tools count];
+    for (i = 0; i < count; i++){
+        printf("Installing %s...\n", [[tools objectAtIndex:i]UTF8String]);
+        gitCloneRec([[tools objectAtIndex:i]UTF8String], Where);
+    }
     printf("Fully installed!\nYou no-longer need to run this script!\n");
     printf("Now to compile any other tool, run\n./autogen.sh\nmake\nsudo make install\n");
 }
 
 void installDep(){
     printf("Installing! Please Wait!\n");
-    InstallDepends("brew");
-    InstallDepends("ack");
-    InstallDepends("atk");
-    InstallDepends("autoconf");
-    InstallDepends("automake");
-    InstallDepends("binutils");
-    InstallDepends("binwalk");
-    InstallDepends("boost");
-    InstallDepends("cairo");
-    InstallDepends("cifer");
-    InstallDepends("clutter");
-    InstallDepends("cmake");
-    InstallDepends("cogl");
-    InstallDepends("colormake");
-    InstallDepends("coreutils");
-    InstallDepends("cryptopp");
-    InstallDepends("curl");
-    InstallDepends("dex2jar");
-    InstallDepends("dns2tcp");
-    InstallDepends("docbook");
-    InstallDepends("docbook-xsl");
-    InstallDepends("dpkg");
-    InstallDepends("expat");
-    InstallDepends("fcrackzip");
-    InstallDepends("findutils");
-    InstallDepends("fontconfig");
-    InstallDepends("foremost");
-    InstallDepends("freetype");
-    InstallDepends("fribidi");
-    InstallDepends("gcc");
-    InstallDepends("gdbm");
-    InstallDepends("gdk-pixbuf");
-    InstallDepends("gettext");
-    InstallDepends("git");
-    InstallDepends("glib");
-    InstallDepends("gmp");
-    InstallDepends("gnu-tar");
-    InstallDepends("graphite2");
-    InstallDepends("gtk-doc");
-    InstallDepends("harfbuzz");
-    InstallDepends("hashpump");
-    InstallDepends("hydra");
-    InstallDepends("icu4c");
-    InstallDepends("isl");
-    InstallDepends("john");
-    InstallDepends("jpeg");
-    InstallDepends("json-glib");
-    InstallDepends("knock");
-    InstallDepends("ldid");
-    InstallDepends("libdnet");
-    InstallDepends("libffi");
-    InstallDepends("libimobiledevice");
-    InstallDepends("libmpc");
-    InstallDepends("libplist");
-    InstallDepends("libpng");
-    InstallDepends("libssh");
-    InstallDepends("libtasn1");
-    InstallDepends("libtiff");
-    InstallDepends("libtool");
-    InstallDepends("libusb");
-    InstallDepends("libusbmuxd");
-    InstallDepends("libxml2");
-    InstallDepends("libzip");
-    InstallDepends("lua");
-    InstallDepends("lynx");
-    InstallDepends("lzo");
-    InstallDepends("m4");
-    InstallDepends("moreutils");
-    InstallDepends("mpfr");
-    InstallDepends("mysql-client");
-    InstallDepends("nmap");
-    InstallDepends("node");
-    InstallDepends("openssl@1.1");
-    InstallDepends("p7zip");
-    InstallDepends("pango");
-    InstallDepends("pcre");
-    InstallDepends("pcre2");
-    InstallDepends("perl");
-    InstallDepends("pigz");
-    InstallDepends("pixman");
-    InstallDepends("pkg-config");
-    InstallDepends("pngcheck");
-    InstallDepends("python3");
-    InstallDepends("readline");
-    InstallDepends("screenfetch");
-    InstallDepends("socat");
-    InstallDepends("source-highlight");
-    InstallDepends("sqlite");
-    InstallDepends("sqlmap");
-    InstallDepends("ssdeep");
-    InstallDepends("tcpflow");
-    InstallDepends("tcpreplay");
-    InstallDepends("tcptrace");
-    InstallDepends("ucspi-tcp");
-    InstallDepends("zip");
-    InstallDepends("xz");
+    NSArray *tools;
+    int i;
+    int count;
+    
+    tools = [NSArray arrayWithObjects:@"brew", @"ack", @"atk", @"autoconf", @"automake", @"binutils", @"binwalk", @"boost", @"cairo", @"cifer", @"clutter", @"cmake", @"cogl", @"colormake", @"coreutils", @"cryptopp", @"curl", @"dex2jar", @"dns2tcp", @"docbook", @"docbook-xsl", @"dpkg", @"expat", @"fcrackzip", @"findutils", @"fontconfig", @"foremost", @"freetype", @"fribidi", @"gcc", @"gdbm", @"gdk-pixbuf", @"gettext", @"git", @"glib", @"gmp", @"gnu-tar", @"graphite2", @"gtk-doc", @"harfbuzz", @"hashpump", @"hydra", @"icu4c", @"isl", @"john", @"jpeg", @"json-glib", @"knock", @"ldid", @"libdnet", @"libffi", @"libimobiledevice", @"libmpc", @"libplist", @"libpng", @"libssh", @"libtasn1", @"libtiff", @"libtool", @"libusb", @"libusbmuxd", @"libxml2", @"libzip", @"lua", @"lynx", @"lzo", @"m4", @"moreutils", @"mpfr", @"mysql-client", @"nmap", @"node", @"openssl@1.1", @"p7zip", @"pango", @"pcre", @"pcre2", @"perl", @"pigz", @"pixman", @"pkg-config", @"pngcheck", @"python3", @"readline", @"screenfetch", @"socat", @"source-highlight", @"sqlite", @"sqlmap", @"ssdeep", @"tcpflow", @"tcpreplay", @"tcptrace", @"ucspi-tcp", @"zip", @"xz", nil];
+    count = [tools count];
+    for (i = 0; i < count; i++){
+        printf("Installing %s...\n", [[tools objectAtIndex:i]UTF8String]);
+        InstallDepends([[tools objectAtIndex:i]UTF8String]);
+    }
 }
 
 void removeRepos(const char *Where){
@@ -304,14 +198,22 @@ int main(int argc, const char * argv[]) {
         NSLog(@"debug 1: %@\n", arg1);
         
         arg2_1 = [arg2_1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
             
         if ([arg2_1 isEqual:@"default"]){
             arg2_1 = [NSString stringWithFormat:@"~/Desktop/TihmstarSoftware/"];
             printf("Did not input custom location, Setting default to ~/Desktop/TihmstarSoftware/\n");
         } else {
             arg2_1 = arg2_1;
+            if([arg2_1 hasSuffix:@"/"]){
+                printf("Please do not use / on the end of your path!\n");
+                exit(1);
+            }
             printf("Did find input custom location, Setting default to %s\n", [arg2_1 UTF8String]);
+            arg2_1 = [arg2_1 stringByAppendingString:[NSString stringWithFormat:@"/"]];
         }
+        
+        
         //exit(1);
         NSString *where = [NSString stringWithFormat:@"%@", arg2_1];
         if ([arg1  isEqual:@"-c"]){
