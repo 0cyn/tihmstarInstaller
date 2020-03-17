@@ -1,1 +1,1 @@
-default
+/Users/brandonplank/Library/Developer/Xcode/DerivedData/tihmstarInstaller-gtcbvavuhfnrqpegbtsspaopttad/Build/Products/Debug/tihmstarsoftware

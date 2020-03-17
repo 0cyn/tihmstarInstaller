@@ -18,8 +18,8 @@ void initInstallBrew(){
         printf("Skipping brew as it is installed!\n");
         return;
     } else {
-        NSString *command = @"cd ";
-        command = [command stringByAppendingString:[NSString stringWithFormat:@"/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""]];
+        NSString *command = @"/usr/bin/ruby ";
+        command = [command stringByAppendingString:[NSString stringWithFormat:@"-e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""]];
         system([command UTF8String]);
         return;
     }
@@ -98,10 +98,8 @@ void gitCloneRec(const char *gitaddress, const char *Where){
     
     NSString *formatted_where = [NSString stringWithUTF8String:Where];
     NSString *command = [NSString stringWithFormat:@"cd %@; git clone --recursive %s", formatted_where, gitaddress];
-    
-    cdAndCompile([lastWord UTF8String], Where);
-    
     system([command UTF8String]);
+    cdAndCompile([lastWord UTF8String], Where);
 }
 
 void initFolerAndCD(const char *Where){
@@ -131,7 +129,7 @@ void downloadAndCompile(const char *Where){
     int count;
        
     tools = [NSArray arrayWithObjects:@"https://github.com/tihmstar/libgeneral", @"https://github.com/tihmstar/img4tool", @"https://github.com/tihmstar/liboffsetfinder64", @"https://github.com/0x36b/xpwn", @"https://github.com/tihmstar/libipatcher", @"https://github.com/tihmstar/libfragmentzip", @"https://github.com/libimobiledevice/libirecovery", @"https://github.com/libimobiledevice/libplist", @"https://github.com/tihmstar/iBoot64Patcher", @"https://github.com/tihmstar/ra1nsn0w", @"https://github.com/libimobiledevice/libimobiledevice", @"https://github.com/tihmstar/futurerestore", @"https://github.com/tihmstar/idevicerestore", @"https://github.com/tihmstar/igetnonce", @"https://github.com/libimobiledevice/libusbmuxd", @"https://github.com/tihmstar/libtakeover", @"https://github.com/tihmstar/libgrabkernel", @"https://github.com/tihmstar/iBoot32Patcher", @"https://github.com/tihmstar/partialZipBrowser", nil];
-    count = [tools count];
+    count = (int)[tools count];
     for (i = 0; i < count; i++){
         printf("Installing %s...\n", [[tools objectAtIndex:i]UTF8String]);
         gitCloneRec([[tools objectAtIndex:i]UTF8String], Where);
@@ -147,7 +145,7 @@ void installDep(){
     int count;
     
     tools = [NSArray arrayWithObjects:@"brew", @"ack", @"atk", @"autoconf", @"automake", @"binutils", @"binwalk", @"boost", @"cairo", @"cifer", @"clutter", @"cmake", @"cogl", @"colormake", @"coreutils", @"cryptopp", @"curl", @"dex2jar", @"dns2tcp", @"docbook", @"docbook-xsl", @"dpkg", @"expat", @"fcrackzip", @"findutils", @"fontconfig", @"foremost", @"freetype", @"fribidi", @"gcc", @"gdbm", @"gdk-pixbuf", @"gettext", @"git", @"glib", @"gmp", @"gnu-tar", @"graphite2", @"gtk-doc", @"harfbuzz", @"hashpump", @"hydra", @"icu4c", @"isl", @"john", @"jpeg", @"json-glib", @"knock", @"ldid", @"libdnet", @"libffi", @"libimobiledevice", @"libmpc", @"libplist", @"libpng", @"libssh", @"libtasn1", @"libtiff", @"libtool", @"libusb", @"libusbmuxd", @"libxml2", @"libzip", @"lua", @"lynx", @"lzo", @"m4", @"moreutils", @"mpfr", @"mysql-client", @"nmap", @"node", @"openssl@1.1", @"p7zip", @"pango", @"pcre", @"pcre2", @"perl", @"pigz", @"pixman", @"pkg-config", @"pngcheck", @"python3", @"readline", @"screenfetch", @"socat", @"source-highlight", @"sqlite", @"sqlmap", @"ssdeep", @"tcpflow", @"tcpreplay", @"tcptrace", @"ucspi-tcp", @"zip", @"xz", nil];
-    count = [tools count];
+    count = (int)[tools count];
     for (i = 0; i < count; i++){
         printf("Installing %s...\n", [[tools objectAtIndex:i]UTF8String]);
         InstallDepends([[tools objectAtIndex:i]UTF8String]);
