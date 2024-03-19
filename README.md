@@ -1,5 +1,13 @@
 # TihmstarInstaller
 
+# upd8 note:
+
+## this is the original code for part of a jb that existed once, but it disappeared and I don't really feel good deleting it. So I'm leaving it here.
+
+
+#  end upd8 rest of this is original readme
+
+
 ## What does it do?
 * It automates the bulding of tihmstar packages and installs them!
 
